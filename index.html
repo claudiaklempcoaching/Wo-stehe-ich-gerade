@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Wo stehst du gerade? – La Maison Vivante</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Sarina&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { color-scheme: light only; }
+  :root {
+    --bg: #f1ecec;
+    --text: #57414d;
+    --highlight: #997c42;
+    --main: #ccd8c6;
+    --accent: #ca6e94;
+    --card: #faf7f7;
+    --line: #e3d9d9;
+  }
+  html {
+    scroll-behavior: smooth;
+    background-color: #f1ecec !important;
+    color: #57414d !important;
+  }
+  body {
+    background-color: #f1ecec !important;
+    color: #57414d !important;
+    font-family: 'Trebuchet MS', sans-serif;
+    min-height: 100vh;
+    padding: 2.5rem 1rem 5rem;
+    line-height: 1.65;
+  }
+  body::before {
+    content: '';
+    position: fixed; top: -140px; right: -140px;
+    width: 520px; height: 520px;
+    background: radial-gradient(circle, rgba(202,110,148,0.10) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed; bottom: -120px; left: -120px;
+    width: 480px; height: 480px;
+    background: radial-gradient(circle, rgba(153,124,66,0.08) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+  .container { max-width: 680px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .brand {
+    font-family: 'Sarina', cursive;
+    color: var(--accent); font-size: 1rem;
+    text-align: center; display: block; margin-bottom: 1.6rem;
+    letter-spacing: 0.02em;
+  }
+
+  /* INTRO */
+  .intro { text-align: center; animation: fadeUp 0.7s ease forwards; }
+  h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2rem, 6vw, 3.1rem);
+    line-height: 1.15; font-weight: 400;
+    margin-bottom: 1.4rem;
+  }
+  h1 em { font-style: italic; color: var(--highlight); }
+  .intro p {
+    font-size: 1.05rem; max-width: 540px; margin: 0 auto 1.1rem;
+  }
+  .intro .small { font-size: 0.92rem; opacity: 0.75; margin-top: 1.8rem; }
+
+  .btn {
+    display: inline-block; cursor: pointer; border: none;
+    background: var(--text); color: var(--bg);
+    font-family: 'Instrument Serif', serif; font-size: 1.2rem;
+    padding: 0.85rem 2.4rem; border-radius: 2rem; margin-top: 2rem;
+    transition: transform 0.25s ease, background 0.25s ease;
+    letter-spacing: 0.02em;
+  }
+  .btn:hover { transform: translateY(-2px); background: var(--highlight); }
+  .btn.accent { background: var(--accent); }
+  .btn.accent:hover { background: var(--highlight); }
+
+  /* PROGRESS */
+  .progress-wrap { margin-bottom: 2.2rem; }
+  .progress-bar {
+    height: 4px; background: var(--line); border-radius: 4px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; width: 0%; background: var(--accent);
+    border-radius: 4px; transition: width 0.4s ease;
+  }
+  .progress-text {
+    font-size: 0.82rem; opacity: 0.7; margin-top: 0.6rem; letter-spacing: 0.04em;
+  }
+
+  /* QUESTION */
+  .question-block { animation: fadeUp 0.5s ease forwards; }
+  .q-text {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.4rem, 4.5vw, 1.95rem);
+    line-height: 1.25; margin-bottom: 1.8rem; font-weight: 400;
+  }
+  .option {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 0.9rem; padding: 1.05rem 1.3rem; margin-bottom: 0.85rem;
+    cursor: pointer; font-size: 1rem; line-height: 1.5;
+    transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  }
+  .option:hover {
+    border-color: var(--accent); transform: translateX(4px);
+    background: #fff;
+  }
+
+  /* RESULT */
+  .result { animation: fadeUp 0.7s ease forwards; }
+  .result .eyebrow {
+    text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.78rem;
+    opacity: 0.7; margin-bottom: 0.8rem;
+  }
+  .result h2 {
+    font-family: 'Instrument Serif', serif; font-weight: 400;
+    font-size: clamp(1.9rem, 5.5vw, 2.7rem); line-height: 1.15;
+    margin-bottom: 1.1rem; color: var(--highlight);
+  }
+  .result .kernsatz {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 1.3rem; margin-bottom: 1.8rem; color: var(--text);
+  }
+  .result p { margin-bottom: 1.2rem; font-size: 1.02rem; }
+  .result .deutung {
+    background: var(--card); border-left: 3px solid var(--accent);
+    padding: 1.2rem 1.4rem; border-radius: 0.5rem; margin-bottom: 1.8rem;
+  }
+  .result .bruecke {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 1.25rem; line-height: 1.4; margin: 2rem 0 0.6rem;
+  }
+  .result .cta-intro { font-size: 1rem; margin-bottom: 0.4rem; }
+  .cta-box {
+    text-align: center; margin-top: 2.4rem; padding-top: 2.2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .hidden { display: none; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .restart {
+    display: block; margin: 2.5rem auto 0; background: none; border: none;
+    color: var(--text); opacity: 0.6; font-size: 0.85rem; cursor: pointer;
+    text-decoration: underline; font-family: 'Trebuchet MS', sans-serif;
+  }
+  .restart:hover { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="container">
+  <span class="brand">La Maison Vivante</span>
+
+  <!-- INTRO -->
+  <section id="intro" class="intro">
+    <h1>Es läuft alles. Und du fühlst dich trotzdem ein bisschen <em>neben dir</em>.</h1>
+    <p>Es gibt diese Tage, da funktioniert alles, und trotzdem fühlst du dich nicht mehr wie du selbst. Nichts, worüber man reden würde. Mir ging es lange so.</p>
+    <p>Acht Fragen. Danach hast du einen Namen dafür, wo du gerade stehst.</p>
+    <button class="btn" onclick="startQuiz()">Ich fange an</button>
+    <p class="small">Dauert keine drei Minuten. Niemand sieht deine Antworten außer dir.</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="hidden">
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText">Frage 1 von 8</div>
+    </div>
+    <div id="questionContainer"></div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="result" class="hidden result"></section>
+</div>
+
+<script>
+// ---------- DATENMODELL ----------
+// Phasen-Schlüssel: stille, riss, suche, wende
+const PHASES = {
+  stille: {
+    name: "Die Stille unter dem Funktionieren",
+    kernsatz: "Von außen stimmt alles. Innen wird es still.",
+    beschreibung: "Du funktionierst tadellos. Der Alltag läuft, niemand würde etwas bemerken. Aber da ist eine Müdigkeit, die kein Schlaf behebt, und eine feine Distanz zu dir selbst, als würdest du dein eigenes Leben durch eine Glasscheibe betrachten. Noch ist es kein Aufschrei. Eher ein Hintergrundrauschen, das du meistens übertönst.",
+    schmerz: "Du darfst dich nicht beschweren, objektiv ist alles gut, und fühlst dich trotzdem nicht ganz. Diese Lücke zwischen „mir geht es gut“ und „warum fühlt es sich nicht so an“ macht dich an dir selbst irre.",
+    bruecke: "Du hast dich an die Stille gewöhnt. Die Frage darunter: Was wäre laut, wenn du dich trauen würdest?"
+  },
+  riss: {
+    name: "Der Riss",
+    kernsatz: "Etwas ist aufgebrochen, und ich kann es nicht mehr zumachen.",
+    beschreibung: "Ein Umbruch hat die Frage freigelegt. Die Stille nach dem Auszug der Kinder, ein runder Geburtstag, ein Moment, in dem etwas gekippt ist. Du kannst nicht mehr wegsehen. Benennen kannst du es auch nicht, und genau das macht Angst. Es ist da, es ist groß, und es hat keinen Namen.",
+    schmerz: "Die Verwirrung. Du hast keine Sprache für das, was passiert, und es fühlt sich an, als würde sich der Boden verschieben, ohne dass du jemandem erklären könntest, warum.",
+    bruecke: "Etwas ist aufgebrochen. Was will durch diesen Riss eigentlich ans Licht?"
+  },
+  suche: {
+    name: "Die Suche nach außen",
+    kernsatz: "Ich verändere alles, und komme mir selbst nicht näher.",
+    beschreibung: "Du bist in Bewegung. Neue Projekte, ein neuer Kurs, eine Veränderung in der Wohnung, im Job, im Aussehen. Du tust etwas, und das fühlt sich erstmal richtig an. Aber leise dämmert dir, dass du die Lösung im Außen suchst, während die Frage von innen kommt. Die Suche selbst beginnt dich zu erschöpfen.",
+    schmerz: "Ungeduld und eine wachsende, leise Verzweiflung. Du strengst dich an, du machst alles richtig, und trotzdem rückt das Gefühl von Stimmigkeit nicht näher.",
+    bruecke: "Du veränderst vieles. Was, wenn die Veränderung weniger im Außen liegt als in dir?"
+  },
+  wende: {
+    name: "Die Wende nach innen",
+    kernsatz: "Ich beginne zu verstehen, dass ich bei mir anfangen muss.",
+    beschreibung: "Die Erkenntnis ist da. Es geht um die Rückverbindung zu dir selbst, nicht um die Umstände. Du machst erste zarte Schritte, dich wieder ernst zu nehmen. Aber du bist verletzlich in dieser Phase. Die alte Gewohnheit, dich selbst hintanzustellen, ist stark, und ohne Halt fällst du leicht zurück.",
+    schmerz: "Die Zerbrechlichkeit des Neuen. Du weißt jetzt, worum es geht, aber du traust dir selbst noch nicht, und fürchtest, wieder zu verschwinden, sobald das Leben dich ruft.",
+    bruecke: "Du hast dich entschieden hinzusehen. Damit zählt eine neue Frage: Wer ist die Frau, zu der du zurückkehrst?"
+  }
+};
+
+// Deutungssätze: HAUPT_NEBEN
+const DEUTUNG = {
+  stille_riss: "Unter der Ruhe spürst du schon ein erstes Beben. Etwas will aufbrechen, und du hältst den Deckel noch fest.",
+  stille_suche: "Du fängst an, kleine Dinge im Außen zu verändern, bevor du dir die leise Unzufriedenheit überhaupt eingestanden hast.",
+  stille_wende: "Im Stillen ahnst du längst, dass es um dich geht. Du sprichst es nur noch nicht aus.",
+  riss_stille: "Der Riss ist frisch, und du ziehst dich instinktiv in die alte Ruhe zurück, weil das Aufgebrochene dir Angst macht.",
+  riss_suche: "Du neigst dazu, den Riss sofort mit Aktionismus zu überdecken, statt erst hineinzuschauen, was da aufbricht.",
+  riss_wende: "Du spürst schon, dass der Riss eine Öffnung ist. Du wendest dich ihm langsam zu, statt ihn zu fürchten.",
+  suche_stille: "Du suchst eifrig, aber unter der Geschäftigkeit liegt eine Müdigkeit, die du noch übergehst.",
+  suche_riss: "Deine Suche wird von einer Dringlichkeit getrieben. Etwas drängt, und du bist in Bewegung, bevor du weißt, wohin.",
+  suche_wende: "Du beginnst zu ahnen, dass all dein Tun im Außen dich von der einen Bewegung ablenkt, die zählt, der nach innen.",
+  wende_stille: "Du vollziehst die Wende leise und für dich. Niemand sieht es, und genau das macht sie verletzlich.",
+  wende_riss: "Deine Wende ist von einem echten Bruch ausgelöst. Kraftvoll, aber noch roh und ungeschützt.",
+  wende_suche: "Auf dem Weg nach innen fällst du noch regelmäßig in alte Außen-Lösungen zurück. Der Reflex, etwas zu tun, sitzt tief."
+};
+
+// Brücken-Anrede je Phase (Ton für CTA)
+// Fragen. tiebreak: true markiert die Schlüsselfrage (Frage 5), die bei Gleichstand doppelt zählt.
+const QUESTIONS = [
+  {
+    text: "Kurz nach sechs am Morgen, du bist wach, bevor der Wecker klingelt. Was machst du mit der Zeit?",
+    options: [
+      { t: "Ich gehe im Kopf den Tag durch, wer was braucht, was ich nicht vergessen darf", p: "stille" },
+      { t: "Ich liege da und spüre so eine Unruhe, für die ich keinen Grund finde", p: "riss" },
+      { t: "Ich stehe auf und mache was Sinnvolles, liegenbleiben fühlt sich verschwendet an", p: "suche" },
+      { t: "Ich bleibe liegen und frage mich, wann ich das letzte Mal wach war, weil ich mich auf etwas freue", p: "wende" }
+    ]
+  },
+  {
+    text: "Du triffst eine Frau, die du lange nicht gesehen hast. Sie fragt, was sich bei dir getan hat. Was denkst du, bevor du antwortest?",
+    options: [
+      { t: "Eigentlich das Übliche, ich erzähle von den Kindern, der Arbeit, dem Haus", p: "stille" },
+      { t: "Eine Sekunde Leere, weil mir zu mir selbst gerade nichts einfällt", p: "riss" },
+      { t: "Ich erzähle, was ich gerade alles angefangen habe, der Kurs, das Projekt", p: "suche" },
+      { t: "Ich merke, dass ich von allen reden kann, nur von mir nicht so richtig", p: "wende" }
+    ]
+  },
+  {
+    text: "Im Schrank hängt ein Kleidungsstück, das du mal geliebt hast. Heute fasst du es an und denkst:",
+    options: [
+      { t: "Passt noch, praktisch, bleibt hängen", p: "stille" },
+      { t: "Das war eine andere Frau, und ich weiß nicht genau, wo die hin ist", p: "riss" },
+      { t: "Weg damit, ich brauche sowieso einen neuen Stil", p: "suche" },
+      { t: "Ich behalte es, aber ich trage es nicht mehr, es fühlt sich nicht mehr nach mir an", p: "wende" }
+    ]
+  },
+  {
+    text: "Es ist Samstagnachmittag, niemand braucht etwas von dir, zwei Stunden gehören dir. Was passiert?",
+    options: [
+      { t: "Ich finde garantiert was, das erledigt werden muss", p: "stille" },
+      { t: "Ich sitze da und fühle mich seltsam unwohl mit der freien Zeit", p: "riss" },
+      { t: "Ich melde mich für etwas an, einen Workshop, eine Klasse, irgendwas Neues", p: "suche" },
+      { t: "Ich versuche, nichts zu tun, und merke, wie schwer mir das fällt", p: "wende" }
+    ]
+  },
+  {
+    text: "Du stehst morgens vor dem Spiegel, niemand sonst im Bad. Was denkst du, wenn du dich anschaust?",
+    tiebreak: true,
+    options: [
+      { t: "Sieht man wenig Schlaf, aber muss heute funktionieren", p: "stille" },
+      { t: "Ich erkenne mich, und gleichzeitig auch nicht so ganz", p: "riss" },
+      { t: "Ich überlege, was ich an mir verändern könnte", p: "suche" },
+      { t: "Ich frage mich, wo die Frau hin ist, die ich mal war", p: "wende" }
+    ]
+  },
+  {
+    text: "Eine Freundin erzählt dir unter Tränen, dass sie ihr Leben umkrempelt. Dein erster, ungefilterter Gedanke?",
+    options: [
+      { t: "Hoffentlich überstürzt sie nichts", p: "stille" },
+      { t: "Ein Stich, weil etwas in mir das auch will und sich nicht traut", p: "riss" },
+      { t: "Ich frage sofort, wie sie es angeht, ich will Konkretes wissen", p: "suche" },
+      { t: "Ich bin still, weil sie ausspricht, worum ich schon eine Weile kreise", p: "wende" }
+    ]
+  },
+  {
+    text: "Es ist spät, das Licht ist aus, alle schlafen. Der Moment, bevor du wegdämmerst. Was ist da?",
+    options: [
+      { t: "Ich gehe durch, was morgen ansteht", p: "stille" },
+      { t: "Eine Unruhe, die tagsüber keinen Platz hatte", p: "riss" },
+      { t: "Gedanken an das, was ich gerade alles anschiebe", p: "suche" },
+      { t: "Die Frage, ob das hier mein Leben ist oder nur mein Alltag", p: "wende" }
+    ]
+  },
+  {
+    text: "Es ist wieder kurz nach sechs, ein Morgen in einem Jahr. Du wachst auf. Woran würdest du merken, dass sich etwas zum Guten gedreht hat?",
+    options: [
+      { t: "Ehrlich gesagt wüsste ich nicht, was anders sein sollte, es läuft doch", p: "stille" },
+      { t: "Ich wüsste endlich, was die ganze Zeit los war mit mir", p: "riss" },
+      { t: "Eins von den vielen Dingen, die ich angefangen habe, würde endlich tragen", p: "suche" },
+      { t: "Ich läge da und fühlte mich wie ich selbst, nicht wie die Summe meiner Aufgaben", p: "wende" }
+    ]
+  }
+];
+
+// Reihenfolge der Optionen pro Frage zufällig mischen, damit kein Muster sichtbar ist
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let current = 0;
+let scores = { stille: 0, riss: 0, suche: 0, wende: 0 };
+let tiebreakChoice = null;
+const order = ["stille", "riss", "suche", "wende"]; // Vorfahrt bei Gleichstand: Schlüsselfrage entscheidet, danach diese Reihenfolge
+
+function startQuiz() {
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
+  current = 0;
+  scores = { stille: 0, riss: 0, suche: 0, wende: 0 };
+  tiebreakChoice = null;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[current];
+  const fill = document.getElementById("progressFill");
+  const ptext = document.getElementById("progressText");
+  fill.style.width = ((current) / QUESTIONS.length * 100) + "%";
+  ptext.textContent = "Frage " + (current + 1) + " von " + QUESTIONS.length;
+
+  const opts = shuffle(q.options);
+  let html = '<div class="question-block"><p class="q-text">' + q.text + '</p>';
+  opts.forEach(function(o) {
+    html += '<div class="option" onclick="choose(\'' + o.p + '\', ' + (q.tiebreak ? "true" : "false") + ')">' + o.t + '</div>';
+  });
+  html += '</div>';
+  document.getElementById("questionContainer").innerHTML = html;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function choose(phase, isTiebreak) {
+  scores[phase]++;
+  if (isTiebreak) tiebreakChoice = phase;
+  current++;
+  if (current < QUESTIONS.length) {
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function rank() {
+  // Sortiert Phasen nach Punkten. Bei Gleichstand entscheidet zuerst die Schlüsselfrage,
+  // danach die feste Reihenfolge order[].
+  return Object.keys(scores).sort(function(a, b) {
+    if (scores[b] !== scores[a]) return scores[b] - scores[a];
+    if (tiebreakChoice === a) return -1;
+    if (tiebreakChoice === b) return 1;
+    return order.indexOf(a) - order.indexOf(b);
+  });
+}
+
+function showResult() {
+  document.getElementById("progressFill").style.width = "100%";
+  const ranked = rank();
+  const haupt = ranked[0];
+  const neben = ranked[1];
+  const H = PHASES[haupt];
+  const deutung = DEUTUNG[haupt + "_" + neben] || "";
+
+  // PLATZHALTER fuer den Alfima-Link. Spaeter ersetzt durch die vier echten
+  // Leads-sammeln-Links, je nach Phase. Aktuell pro Phase ein eigener Platzhalter.
+  const ALFIMA_LINKS = {
+    stille: "https://alfima.com/lamaisonvivante/Auswertung-Stille",
+    riss:   "https://alfima.com/lamaisonvivante/Auswertung-Riss",
+    suche:  "https://alfima.com/lamaisonvivante/Auswertung-Suche",
+    wende:  "https://alfima.com/lamaisonvivante/Auswertung-Wende"
+  };
+  const ctaLink = ALFIMA_LINKS[haupt];
+
+  let html = '';
+  html += '<p class="eyebrow">Dein Standort gerade</p>';
+  html += '<h2>' + H.name + '</h2>';
+  html += '<p class="kernsatz">„' + H.kernsatz + '“</p>';
+  html += '<p>' + H.beschreibung + '</p>';
+  if (deutung) {
+    html += '<div class="deutung">' + deutung + '</div>';
+  }
+  html += '<p>' + H.schmerz + '</p>';
+
+  html += '<div class="cta-box">';
+  html += '<p class="bruecke">' + H.bruecke + '</p>';
+  html += '<p class="cta-intro">Diese Frage ist der Anfang von etwas. Ich habe dir eine ausführlichere Deutung geschrieben, mit dem ersten konkreten Schritt, der zu deinem Standort passt. Trag dich ein, dann kommt sie zu dir.</p>';
+  html += '<a class="btn accent" href="' + ctaLink + '">Schick mir meine Auswertung</a>';
+  html += '</div>';
+
+  html += '<button class="restart" onclick="restart()">Nochmal von vorne</button>';
+
+  const r = document.getElementById("result");
+  r.innerHTML = html;
+  document.getElementById("quiz").classList.add("hidden");
+  r.classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function restart() {
+  document.getElementById("result").classList.add("hidden");
+  document.getElementById("intro").classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+</script>
+</body>
+</html>
